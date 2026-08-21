@@ -1,3 +1,6 @@
+<img src= https://github.com/gauthamr58/Kubernetes-Zero-To-Hero/main/Introduction%20to%20K8s/assets/evolution.png" alt="Banner"/>
+
+
 ## Why you need Kubernetes and what it can do
 Before Kubernetes and containers became standard, software infrastructure went through two major phases
 
