@@ -52,3 +52,12 @@ Kubernetes can and provides you with:
 
 ## What is kubernetes?
 Kubernetes (often abbreviated as **K8s**) is an open-source container orchestration platform designed to automate the deployment, scaling, and management of containerized applications. Originally developed by Google and now maintained by the Cloud Native Computing Foundation (CNCF), it serves as the operating system for cloud-native infrastructure, and providing a consistent environment for your applications, no matter where they run (on-premises, public cloud, hybrid cloud).
+
+### Cluster Architecture
+
+Kubernetes is fundamentally a cluster architecture because it operates across a collection of machines (physical or virtual) that work together as a single, unified computing resource. Instead of managing containers on individual servers, you manage them on the cluster.
+
+A Kubernetes cluster consists of a control plane **(master node)** plus a set of worker machines, called worker nodes, that run containerized applications. Every cluster needs at least one worker node in order to run Pods.
+
+<img src= "https://github.com/gauthamr58/Kubernetes-Zero-To-Hero/blob/main/Introduction%20to%20k8s/assets/k8sarch.svg" alt="Banner"/>
+
