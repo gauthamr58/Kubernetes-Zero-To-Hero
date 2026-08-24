@@ -57,7 +57,10 @@ Kubernetes (often abbreviated as **K8s**) is an open-source container orchestrat
 
 Kubernetes is fundamentally a cluster architecture because it operates across a collection of machines (physical or virtual) that work together as a single, unified computing resource. Instead of managing containers on individual servers, you manage them on the cluster.
 
-A Kubernetes cluster consists of a control plane **(master node)** plus a set of worker machines, called worker nodes, that run containerized applications. Every cluster needs at least one worker node in order to run Pods.
+A Kubernetes cluster consists of a control plane **(master node)** plus a set of worker machines, called **worker nodes**, that run containerized applications. Every cluster needs at least one worker node in order to run Pods.
+
+## The Architecture of Kubernetes
+
 
 <img src= "https://github.com/gauthamr58/Kubernetes-Zero-To-Hero/blob/main/Introduction%20to%20k8s/assets/k8sarch.svg" alt="Banner"/>
 
