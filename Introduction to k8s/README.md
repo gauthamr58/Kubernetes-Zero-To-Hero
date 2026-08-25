@@ -69,3 +69,69 @@ A Kubernetes cluster consists of two main types of nodes
 1.  **a control plane (master node):** The "brain" of the cluster. It manages the worker nodes and the Pods running on them. There's usually at least one, but often multiple for high availability. 
 2.  **worker nodes**, that run containerized applications inside (Pods). Every cluster needs at least one worker node.
 
+
+```
++-------------------------------------------------------+
+|                 Kubernetes Cluster                    |
+|                                                       |
+|   +---------------------+       +-------------------+ |
+|   |   Control Plane     |       |    Worker Node 1  | |
+|   | (Master Node)       |       |                   | |
+|   |---------------------|       |-------------------| |
+|   | - API Server        |       | - Kubelet         | |
+|   | - etcd              |       | - Kube-proxy      | |
+|   | - Scheduler         |       | - Container       | |
+|   | - Controller Manager|       |   Runtime (Docker)| |
+|   +---------------------+       +-------------------+ |
+|                                                       |
+|   +---------------------+       +-------------------+ |
+|   |   Worker Node N     |       |       ...         | |
+|   |                     |       |                   | |
+|   |---------------------|       |-------------------| |
+|   | - Kubelet           |       |                   | |
+|   | - Kube-proxy        |       |                   | |
+|   | - Container         |       |                   | |
+|   |   Runtime (Docker)  |       |                   | |
+|   +---------------------+       +-------------------+ |
++-------------------------------------------------------+
+```
+
+## Control plane components(Master node)
+
+These components manage the cluster state and make global decisions.
+
+* **kube-apiserver (API Server):**
+      * The **front-end** for the Kubernetes control plane.
+      * Exposes the Kubernetes API, which is the central communication hub. All interactions (from `kubectl` to other components) go through the API Server.
+      * Validates and configures data for API objects (Pods, Services, etc.).
+  * **etcd:**
+      * A highly available, distributed, consistent **key-value store**.
+      * Kubernetes uses `etcd` to store all cluster data, including the desired state of your applications, configuration, and actual state.
+      * It's the single source of truth for the cluster.
+  * **kube-scheduler (Scheduler):**
+      * Watches for newly created Pods with no assigned node.
+      * Selects the **best node** for a Pod to run on, considering factors like resource requirements, hardware constraints, policy constraints, affinity, and anti-affinity specifications.
+  * **kube-controller-manager (Controller Manager):**
+      * Runs controller processes that regulate the state of the cluster.
+      * Each controller (e.g., Node Controller, Replication Controller, Endpoints Controller, Service Account & Token Controllers) manages a specific resource type.
+      * Its job is to bring the current state of the cluster closer to the desired state. For example, the Replication Controller ensures the correct number of Pods for a ReplicaSet are always running.
+  
+
+  ### Worker Node Components
+
+These components run on each worker node and are responsible for maintaining running Pods and providing the Kubernetes runtime environment.
+
+  * **kubelet:**
+      * An agent that runs on each node in the cluster.
+      * Ensures that containers are running in a Pod.
+      * Receives Pod specifications from the API Server and ensures the containers described in those Pods are healthy and running.
+      * Reports the status of the Pods and the node back to the API Server.
+  * **kube-proxy:**
+      * A network proxy that runs on each node.
+      * Maintains network rules on nodes, allowing network communication to your Pods from inside or outside of the cluster.
+      * Handles network proxying for Kubernetes Services, providing load balancing and service discovery.
+  * **Container Runtime (e.g., Docker, containerd, CRI-O):**
+      * The software responsible for running containers.
+      * Kubernetes supports various container runtimes that implement the Kubernetes Container Runtime Interface (CRI).
+      * It pulls container images from a registry, unpackages them, and runs them.
+
