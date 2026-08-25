@@ -135,3 +135,90 @@ These components run on each worker node and are responsible for maintaining run
       * Kubernetes supports various container runtimes that implement the Kubernetes Container Runtime Interface (CRI).
       * It pulls container images from a registry, unpackages them, and runs them.
 
+-----
+
+## What is a Kubernetes Pod?
+
+In Kubernetes, a **Pod** is the smallest and most fundamental deployable unit in the Kubernetes object model.
+
+### Key characteristics of a Pod:
+
+  * **Atomic Unit of Deployment:** Kubernetes manages, schedules, and scales Pods as single units, not individual containers.
+  * **Shared Resources:** All containers within a single Pod share the same network namespace, IP address, port space, and storage volumes. This allows them to communicate with each other using `localhost` and share data efficiently.
+  * **Ephemeral:** Pods are designed to be relatively ephemeral. If a Pod dies (e.g., due to a node failure or application crash), Kubernetes will automatically create a *new* Pod to replace it, rather than trying to restart the old one.
+  * **Ephemeral:** Pods are designed to be relatively ephemeral. If a Pod dies (e.g., due to a node failure or application crash), Kubernetes will automatically create a *new* Pod to replace it, rather than trying to restart the old one.
+  * **Single vs. Multi-Container:** Most Pods run a single container (e.g., an app backend), but multi-container patterns (like sidecars, init containers, or adapters) are used when processes must closely cooperate.
+  
+----
+
+## Example: `nginx-pod.yml`
+
+
+```yaml
+# nginx-pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-nginx-pod
+  labels:
+    app: nginx
+    environment: development
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+```
+
+-----
+
+## Explanation of `nginx-pod.yml` Content
+
+  * **`apiVersion: v1`**
+
+      * Specifies the Kubernetes API version being used to create this object. For core Kubernetes objects like Pods, `v1` is the standard.
+
+  * **`kind: Pod`**
+
+      * Declares the type of Kubernetes object we are creating. In this case, it's a `Pod`.
+
+  * **`metadata:`**
+
+      * This section holds metadata about the Pod.
+      * **`name: my-nginx-pod`**: A unique name for this Pod within its namespace. Kubernetes uses this name to identify and manage the Pod.
+      * **`labels:`**:
+          * Key-value pairs that are used to organize and select Kubernetes objects. They are crucial for grouping related resources (e.g., all Pods belonging to a specific application or environment).
+          * `app: nginx`: Indicates that this Pod is part of the `nginx` application.
+          * `environment: development`: Specifies the environment this Pod is intended for.
+
+  * **`spec:`**
+
+      * This section defines the desired state of the Pod, describing what should run inside it.
+      * **`containers:`**:
+          * A list of container definitions that will run within this Pod. Even for a single-container Pod, this is an array.
+          * **`- name: nginx-container`**: A unique name for this specific container within the Pod.
+          * **`image: nginx:latest`**: The Docker image to use for this container. `nginx:latest` tells Kubernetes to pull the latest version of the official Nginx image from Docker Hub.
+          * **`ports:`**:
+              * A list of ports that the container exposes. This is informational; it doesn't actually open the port on the node but declares which ports the application inside the container listens on.
+              * **`- containerPort: 80`**: Declares that the Nginx container listens on port 80 (the default HTTP port).
+          * **`resources:`**:
+              * Defines the resource requests and limits for the container. This is crucial for Kubernetes to schedule the Pod effectively and for cluster stability.
+              * **`requests:`**: The minimum amount of resources the container needs. Kubernetes guarantees these resources will be available when scheduling the Pod.
+                  * `memory: "64Mi"`: Requests 64 mebibytes of memory.
+                  * `cpu: "250m"`: Requests 250 millicores of CPU (i.e., 25% of a single CPU core).
+              * **`limits:`**: The maximum amount of resources the container can consume. If a container tries to use more than its limit, it might be throttled or even terminated (e.g., an OOMKilled event for memory).
+                  * `memory: "128Mi"`: Limits memory usage to 128 mebibytes.
+                  * `cpu: "500m"`: Limits CPU usage to 500 millicores (i.e., 50% of a single CPU core).
+
+-----
+
+## What Happens When You Execute `kubectl apply -f nginx-pod.yml`?
+
